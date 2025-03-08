@@ -1,9 +1,9 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
+import streamlit as st  # Streamlit untuk membuat aplikasi web interaktif dengan Python
+import pandas as pd  # Pandas untuk manipulasi dan analisis data
+import numpy as np  # NumPy untuk komputasi numerik dan array multidimensi
+import matplotlib.pyplot as plt  # Matplotlib untuk membuat visualisasi data statis
+import seaborn as sns  # Seaborn untuk visualisasi data yang lebih menarik dan kompleks
+import plotly.express as px  # Plotly untuk visualisasi interaktif dan grafik kompleks
 
 # Load Data
 df_day = pd.read_csv("day.csv")
