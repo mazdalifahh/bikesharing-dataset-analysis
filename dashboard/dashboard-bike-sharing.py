@@ -133,3 +133,41 @@ plt.ylabel("Jumlah Penyewa")
 plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
+
+## Hari kerja dan Libur
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Analisis peminjaman sepeda berdasarkan hari kerja vs libur
+
+# Add subheader for this section
+st.subheader("Peminjaman Sepeda berdasarkan Hari Kerja vs Hari Libur")
+
+plt.figure(figsize=(8,5))
+sns.barplot(data=df_main, x='workingday', y='cnt', palette="Blues_d")
+plt.xticks([0, 1], ['Hari Libur', 'Hari Kerja'])
+plt.xlabel('Hari')
+plt.ylabel('Jumlah Peminjaman')
+plt.title('Peminjaman Sepeda pada Hari Kerja vs Hari Libur')
+plt.grid(axis='y')
+plt.show()
+
+## Analisis Peminjaman berdasarkan Musim dan kategori Pengguna
+# Add subheader for this section
+st.subheader("Peminjaman berdasarkan Musim dan Kategori Pengguna")
+
+# Clustering berdasarkan musim
+season_map = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
+df_main['season_name'] = df_main['season'].map(season_map)
+
+# Visualisasi peminjaman berdasarkan musim
+plt.figure(figsize=(8, 5))
+sns.barplot(data=df_main, x='season_name', y='cnt', order=['Spring', 'Summer', 'Fall', 'Winter'], palette="viridis")
+plt.xlabel('Musim')
+plt.ylabel('Jumlah Peminjaman')
+plt.title('Peminjaman Sepeda Berdasarkan Musim')
+plt.grid(axis='y')
+plt.show()
+
+
+
