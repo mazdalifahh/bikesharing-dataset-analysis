@@ -110,3 +110,34 @@ plt.ylabel('Jumlah Penyewa')
 plt.xticks(range(0, 24))
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
+
+## Musim dan Cuaca
+# Add subheader for this section
+st.subheader("Pengaruh Musim dan Cuaca terhadap Penyewaan Sepeda")
+
+# Plot boxplot untuk pengaruh musim terhadap penyewaan sepeda
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=df_main, x='season', y='cnt', hue='season', palette="pastel", dodge=False)
+
+# Label musim
+plt.xticks([0, 1, 2, 3], ["Spring", "Summer", "Fall", "Winter"])  # Ubah angka jadi label musim
+plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
+plt.xlabel("Musim")
+plt.ylabel("Jumlah Penyewaan")
+plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
+plt.grid()
+st.pyplot(plt)  # Display the plot in Streamlit
+
+# Plot boxplot untuk pengaruh cuaca terhadap penyewaan sepeda
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=df_main, x='weathersit', y='cnt', hue='weathersit', palette="pastel", dodge=False)
+
+# Label cuaca
+plt.xticks([0, 1, 2, 3], ["Clear", "Mist", "Light Snow/Rain", "Heavy Rain/Snow"])  # Ubah angka jadi label deskriptif cuaca
+plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
+plt.xlabel("Kondisi Cuaca")
+plt.ylabel("Jumlah Penyewa")
+plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
+plt.grid()
+st.pyplot(plt)  # Display the plot in Streamlit
+
