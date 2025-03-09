@@ -1,1 +1,2 @@
-https://bikesharing-dataset-analysis-xq7btfq2dafytkqjm5dbbf.streamlit.app/
+streamlit: https://bikesharing-dataset-analysis-xq7btfq2dafytkqjm5dbbf.streamlit.app/
+github: https://github.com/mazdalifahh/bikesharing-dataset-analysis
