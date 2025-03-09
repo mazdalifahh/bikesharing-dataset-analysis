@@ -88,19 +88,21 @@ st.pyplot(plt)  # Display the plot in Streamlit
 ## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
 # Add header before subheader
 st.header("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
+
+# Add subheader for this section
 st.subheader("Pola Penyewaan Sepeda Berdasarkan Hari dalam Seminggu")
 
-# Tambahkan kolom weekday (0 = Senin, 6 = Minggu)
-df_main['weekday'] = df_main['dteday'].dt.weekday  # 0 = Senin, 6 = Minggu
+# Group by 'weekday' to get average count of rentals per day
+daily_rentals = df_main.groupby('weekday')['cnt'].mean().reset_index()
 
-# Plotkan boxplot untuk penyewaan sepeda berdasarkan hari dalam seminggu
+# Plot bar chart for daily rentals
 plt.figure(figsize=(10, 5))
-sns.boxplot(data=df_main, x='weekday', y='cnt')
+sns.barplot(data=daily_rentals, x='weekday', y='cnt', palette="Blues_d")
 plt.title('Penyewaan Sepeda Berdasarkan Hari dalam Seminggu')
 plt.xlabel('Hari')
 plt.ylabel('Jumlah Penyewa')
 plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
-plt.grid()
+plt.grid(axis='y')
 st.pyplot(plt)  # Display the plot in Streamlit
 
 # Add subheader for this section
