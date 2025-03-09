@@ -221,6 +221,10 @@ st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Regis
 # Menampilkan RFM DataFrame
 st.write(df_rfm)
 
+# Menambahkan keterangan copyright di footer
+st.markdown("<br><hr><p style='text-align: center;'>Copyright (c) Mazdalifah Hanuranda 2025</p>", unsafe_allow_html=True)
+
+
 
 
 
