@@ -86,11 +86,7 @@ plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
 
 ## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
-# Add header before subheader
-st.header("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
-
-# Add subheader for this section
-st.subheader("Pola Penyewaan Sepeda Berdasarkan Hari dalam Seminggu")
+st.subheader("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
 
 # Group by 'weekday' to get average count of rentals per day
 daily_rentals = df_main.groupby('weekday')['cnt'].mean().reset_index()
@@ -104,9 +100,6 @@ plt.ylabel('Jumlah Penyewa')
 plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
 plt.grid(axis='y')
 st.pyplot(plt)  # Display the plot in Streamlit
-
-# Add subheader for this section
-st.subheader("Pola Penyewaan Sepeda Berdasarkan Jam")
 
 # Plotkan tren penyewaan sepeda per jam
 plt.figure(figsize=(10, 5))
