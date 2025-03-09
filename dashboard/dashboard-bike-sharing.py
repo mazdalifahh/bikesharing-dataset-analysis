@@ -203,7 +203,7 @@ df_main['Casual_Category'] = pd.cut(df_main['casual'], bins=[0, 500, 1500, 3000,
 df_main['Registered_Category'] = pd.cut(df_main['registered'], bins=[0, 500, 1500, 3000, 5000], labels=['Low', 'Medium', 'High', 'Very High'])
 
 # Menampilkan RFM DataFrame (tanpa duplikat)
-df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary', 'Casual_Category', 'Registered_Category']].drop_duplicates()
+df_rfm = df_main[['Date', 'Recency', 'Frequency', 'Monetary', 'Casual_Category', 'Registered_Category']].drop_duplicates()
 
 # Menampilkan DataFrame RFM di Streamlit
 st.subheader("📊 RFM Analysis with Binning")
