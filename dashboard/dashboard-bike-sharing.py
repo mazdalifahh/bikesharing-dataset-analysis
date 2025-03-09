@@ -212,45 +212,6 @@ st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Regis
 # Menampilkan RFM DataFrame
 st.write(df_rfm)
 
-# Visualisasi Recency
-plt.figure(figsize=(8, 5))
-sns.histplot(df_rfm['Recency'], kde=True, color='blue')
-plt.title('Distribusi Recency')
-plt.xlabel('Recency (hari terakhir penyewaan)')
-plt.ylabel('Frekuensi')
-st.pyplot()
-
-# Visualisasi Frequency
-plt.figure(figsize=(8, 5))
-sns.histplot(df_rfm['Frequency'], kde=True, color='green')
-plt.title('Distribusi Frequency')
-plt.xlabel('Jumlah Penyewaan')
-plt.ylabel('Frekuensi')
-st.pyplot()
-
-# Visualisasi Monetary
-plt.figure(figsize=(8, 5))
-sns.histplot(df_rfm['Monetary'], kde=True, color='red')
-plt.title('Distribusi Monetary')
-plt.xlabel('Jumlah Penyewaan')
-plt.ylabel('Frekuensi')
-st.pyplot()
-
-# Visualisasi Binning berdasarkan kategori Casual
-plt.figure(figsize=(8, 5))
-sns.countplot(x='Casual_Category', data=df_rfm, palette='coolwarm')
-plt.title('Distribusi Binning Casual')
-plt.xlabel('Kategori Casual')
-plt.ylabel('Jumlah Penyewaan')
-st.pyplot()
-
-# Visualisasi Binning berdasarkan kategori Registered
-plt.figure(figsize=(8, 5))
-sns.countplot(x='Registered_Category', data=df_rfm, palette='coolwarm')
-plt.title('Distribusi Binning Registered')
-plt.xlabel('Kategori Registered')
-plt.ylabel('Jumlah Penyewaan')
-st.pyplot()
 
 
 
