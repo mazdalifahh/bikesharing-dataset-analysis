@@ -64,8 +64,6 @@ df_main['dteday'] = pd.to_datetime(df_main['dteday'])
 df_main['year'] = df_main['dteday'].dt.year
 df_main['month'] = df_main['dteday'].dt.month
 
-
-# Plot dengan berdasarkan tahun
 # Plot dengan hue berdasarkan tahun
 plt.figure(figsize=(10, 5))
 sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
@@ -77,7 +75,7 @@ plt.ylabel("Jumlah Penyewaan")
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
 
-##Penyewaan Sepeda Berdasarkan hari dan jam
+## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
 # Pilih warna tunggal untuk semua bar
 single_color = "steelblue"  # Ganti dengan warna lain jika diinginkan
 
@@ -109,7 +107,6 @@ plt.ylabel('Jumlah Penyewa')
 plt.xticks(range(0, 24))
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
-
 
 ## Musim dan Cuaca
 # Add subheader for this section
@@ -222,5 +219,5 @@ st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Regis
 # Menampilkan RFM DataFrame
 st.write(df_rfm)
 
-# Menambahkan keterangan copyright di footer
-st.caption('Copyright (c) Mazdalifah Hanuranda')
+
+st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
