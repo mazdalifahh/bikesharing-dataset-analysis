@@ -75,15 +75,19 @@ plt.ylabel("Jumlah Penyewaan")
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
 
-## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
-st.subheader("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
+##Penyewaan Sepeda Berdasarkan hari dan jam
+# Pilih palet warna yang konsisten
+color_choice = "Blues_d"  # Atau bisa memilih warna lain sesuai preferensi
+
+# Pola Penyewaan Sepeda Berdasarkan Hari dalam Seminggu
+st.subheader("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari")
 
 # Group by 'weekday' to get average count of rentals per day
 daily_rentals = df_main.groupby('weekday')['cnt'].mean().reset_index()
 
-# Plot bar chart for daily rentals
+# Plot bar chart for daily rentals dengan warna yang sama
 plt.figure(figsize=(10, 5))
-sns.barplot(data=daily_rentals, x='weekday', y='cnt', palette="Blues_d")
+sns.barplot(data=daily_rentals, x='weekday', y='cnt', palette=color_choice)
 plt.title('Penyewaan Sepeda Berdasarkan Hari dalam Seminggu')
 plt.xlabel('Hari')
 plt.ylabel('Jumlah Penyewa')
@@ -91,9 +95,12 @@ plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Mi
 plt.grid(axis='y')
 st.pyplot(plt)  # Display the plot in Streamlit
 
-# Plotkan tren penyewaan sepeda per jam
+# Pola Penyewaan Sepeda per Jam
+st.subheader("Pola Penyewaan Sepeda per Jam")
+
+# Plotkan tren penyewaan sepeda per jam dengan warna yang sama
 plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='hr', y='cnt', marker="o")
+sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", palette=color_choice)
 plt.title('Pola Penyewaan Sepeda per Jam')
 plt.xlabel('Jam')
 plt.ylabel('Jumlah Penyewa')
