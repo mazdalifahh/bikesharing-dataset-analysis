@@ -7,7 +7,7 @@ seaborn==0.13.2
 streamlit==1.37.1
 
 
-# Penjelasan:
+## Penjelasan:
 pandas: Digunakan untuk manipulasi dan analisis data.
 numpy: Digunakan untuk operasi numerik.
 matplotlib: Digunakan untuk visualisasi data.
