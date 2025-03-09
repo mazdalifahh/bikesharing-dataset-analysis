@@ -67,19 +67,19 @@ st.metric("Average Rentals per Day", round(df_filtered['cnt'].mean(), 2))
 ## Tren Penyewaan Sepeda Sepanjang Tahun
 
 # Pastikan kolom dteday sudah dalam format datetime
-df_day['dteday'] = pd.to_datetime(df_day['dteday'])
+df_main['dteday'] = pd.to_datetime(df_main['dteday'])
 
 # Tambahkan kolom tahun & bulan
-df_day['year'] = df_day['dteday'].dt.year
-df_day['month'] = df_day['dteday'].dt.month
+df_main['year'] = df_main['dteday'].dt.year
+df_main['month'] = df_main['dteday'].dt.month
 
 # Plot dengan hue berdasarkan tahun
 plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_day, x='month', y='cnt', hue='year', marker="o")
+sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
 
 plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
 plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
 plt.xlabel("Bulan")
 plt.ylabel("Jumlah Penyewaan")
 plt.grid()
-plt.show()
+st.pyplot(plt)  # Display the plot in Streamlit
