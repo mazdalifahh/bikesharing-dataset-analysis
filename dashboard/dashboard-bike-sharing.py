@@ -266,6 +266,7 @@ ax[2].tick_params(axis='x', labelsize=12, rotation=45)
 
 plt.suptitle("Top 5 Days Based on RFM Parameters", fontsize=20)
 plt.show()
+st.pyplot(fig)
 
 # Binning Kategori Penyewaan
 # Menentukan batas bin berdasarkan kuantil
