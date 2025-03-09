@@ -168,7 +168,8 @@ plt.grid(axis='y')
 plt.show()
 st.pyplot(plt)  # Display the plot in Streamlit
 
-## RFM Analysis
+## Binning dan RFM Analysis
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -192,10 +193,23 @@ df_main['Frequency'] = df_main['cnt']
 # 3. **Monetary**: Menghitung Monetary (jumlah penyewaan)
 df_main['Monetary'] = df_main['cnt']
 
-# Menampilkan RFM DataFrame (tanpa duplikat)
-df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary']].drop_duplicates()
+# 4. **Binning**: Menggunakan binning untuk membagi jumlah penyewaan
+# Binning jumlah penyewaan untuk kategori 'casual' dan 'registered'
 
-# 4. **Visualisasi RFM**
+# Membuat bin untuk casual
+df_main['Casual_Category'] = pd.cut(df_main['casual'], bins=[0, 500, 1500, 3000, 5000], labels=['Low', 'Medium', 'High', 'Very High'])
+
+# Membuat bin untuk registered
+df_main['Registered_Category'] = pd.cut(df_main['registered'], bins=[0, 500, 1500, 3000, 5000], labels=['Low', 'Medium', 'High', 'Very High'])
+
+# Menampilkan RFM DataFrame (tanpa duplikat)
+df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary', 'Casual_Category', 'Registered_Category']].drop_duplicates()
+
+# Menampilkan DataFrame RFM di Streamlit
+st.subheader("📊 RFM Analysis with Binning")
+st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Registered.")
+
+# Menampilkan RFM DataFrame
 st.write(df_rfm)
 
 # Visualisasi Recency
@@ -204,7 +218,7 @@ sns.histplot(df_rfm['Recency'], kde=True, color='blue')
 plt.title('Distribusi Recency')
 plt.xlabel('Recency (hari terakhir penyewaan)')
 plt.ylabel('Frekuensi')
-plt.show()
+st.pyplot()
 
 # Visualisasi Frequency
 plt.figure(figsize=(8, 5))
@@ -212,7 +226,7 @@ sns.histplot(df_rfm['Frequency'], kde=True, color='green')
 plt.title('Distribusi Frequency')
 plt.xlabel('Jumlah Penyewaan')
 plt.ylabel('Frekuensi')
-plt.show()
+st.pyplot()
 
 # Visualisasi Monetary
 plt.figure(figsize=(8, 5))
@@ -220,21 +234,23 @@ sns.histplot(df_rfm['Monetary'], kde=True, color='red')
 plt.title('Distribusi Monetary')
 plt.xlabel('Jumlah Penyewaan')
 plt.ylabel('Frekuensi')
-plt.show()
+st.pyplot()
 
-# Untuk menambahkan analisis dalam Streamlit dashboard
-st.subheader("📊 RFM Analysis")
-st.write("RFM Analysis memberikan gambaran terkait Recency, Frequency, dan Monetary pengguna berdasarkan data penyewaan sepeda.")
+# Visualisasi Binning berdasarkan kategori Casual
+plt.figure(figsize=(8, 5))
+sns.countplot(x='Casual_Category', data=df_rfm, palette='coolwarm')
+plt.title('Distribusi Binning Casual')
+plt.xlabel('Kategori Casual')
+plt.ylabel('Jumlah Penyewaan')
+st.pyplot()
 
-# Menampilkan dataframe RFM di Streamlit
-st.write(df_rfm)
-
-# Menampilkan grafik Recency, Frequency, dan Monetary di Streamlit
-st.pyplot(plt.figure(figsize=(8, 5)))
-sns.histplot(df_rfm['Recency'], kde=True, color='blue')
-plt.title('Distribusi Recency')
-plt.xlabel('Recency (hari terakhir penyewaan)')
-plt.ylabel('Frekuensi')
+# Visualisasi Binning berdasarkan kategori Registered
+plt.figure(figsize=(8, 5))
+sns.countplot(x='Registered_Category', data=df_rfm, palette='coolwarm')
+plt.title('Distribusi Binning Registered')
+plt.xlabel('Kategori Registered')
+plt.ylabel('Jumlah Penyewaan')
+st.pyplot()
 
 
 
