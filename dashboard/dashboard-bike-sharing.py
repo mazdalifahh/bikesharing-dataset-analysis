@@ -7,14 +7,9 @@ import plotly.express as px
 # Load Data
 df_main = pd.read_csv("dashboard/main_data.csv")
 
-# Group berdasarkan tipe pengguna dan tanggal untuk menghitung penyewaan harian
-daily_rent_casual = df_main[df_main['user_type'] == 'casual'].groupby('date')['cnt'].sum()
-daily_rent_registered = df_main[df_main['user_type'] == 'registered'].groupby('date')['cnt'].sum()
-
-# Tampilkan atau analisis data ini secara terpisah
-st.write('Penyewaan Harian (Casual):', daily_rent_casual)
-st.write('Penyewaan Harian (Registered):', daily_rent_registered)
-
+# Group by daily rentals for casual and registered users
+daily_rent_casual = df_main[df_main['user'] == 'casual'].groupby('date')['count'].sum()
+daily_rent_registered = df_main[df_main['user'] == 'registered'].groupby('date')['count'].sum()
 
 # Convert dteday to datetime
 df_main['dteday'] = pd.to_datetime(df_main['dteday'])
@@ -226,4 +221,5 @@ st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Regis
 st.write(df_rfm)
 
 # Menambahkan keterangan copyright di footer
-st.caption('Copyright (c) Mazdal
+st.caption('Copyright (c) Mazdal')
+ß
