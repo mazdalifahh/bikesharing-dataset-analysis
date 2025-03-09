@@ -100,13 +100,14 @@ st.subheader("Pola Penyewaan Sepeda per Jam")
 
 # Plotkan tren penyewaan sepeda per jam dengan warna yang sama
 plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", palette=color_choice)
+sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", color=sns.color_palette(color_choice)[0])
 plt.title('Pola Penyewaan Sepeda per Jam')
 plt.xlabel('Jam')
 plt.ylabel('Jumlah Penyewa')
 plt.xticks(range(0, 24))
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
+
 
 ## Musim dan Cuaca
 # Add subheader for this section
