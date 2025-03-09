@@ -28,13 +28,13 @@ Proyek ini menggunakan dua dataset:
 1. day.csv: Data penyewaan sepeda per hari yang berisi informasi tentang jumlah penyewaan sepeda pada setiap hari.
 2. hour.csv: Data penyewaan sepeda per jam yang berisi informasi tentang jumlah penyewaan sepeda per jam pada setiap hari.
 
-# Kolom-Kolom dalam day.csv:
+## Kolom-Kolom dalam day.csv:
 - dteday: Tanggal penyewaan.
 - season: Musim (1 = Spring, 2 = Summer, 3 = Fall, 4 = Winter).
 - weathersit: Kondisi cuaca (1 = Clear, 2 = Mist, 3 = Light Snow/Rain, 4 = Heavy Rain/Snow).
 - cnt: Jumlah penyewaan sepeda pada hari tersebut.
 
-# Kolom-Kolom dalam hour.csv:
+## Kolom-Kolom dalam hour.csv:
 - hr: Jam penyewaan.
 - cnt: Jumlah penyewaan sepeda pada jam tersebut.
 
