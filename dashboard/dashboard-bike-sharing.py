@@ -60,26 +60,6 @@ st.subheader("Tren Penyewaan Sepeda Sepanjang Tahun")
 # Pastikan kolom dteday sudah dalam format datetime
 df_main['dteday'] = pd.to_datetime(df_main['dteday'])
 
-# Tambahkan kolom tahun & bulan
-df_main['year'] = df_main['dteday'].dt.year
-df_main['month'] = df_main['dteday'].dt.month
-
-# Membuat jumlah penyewaan harian
-st.subheader('Daily Rentals')
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    daily_rent_casual = df_main[df_main['user_type'] == 'casual'].groupby('date')['cnt'].sum().sum()
-    st.metric('Casual User', value=daily_rent_casual)
-
-with col2:
-    daily_rent_registered = df_main[df_main['user_type'] == 'registered'].groupby('date')['cnt'].sum().sum()
-    st.metric('Registered User', value=daily_rent_registered)
-
-with col3:
-    daily_rent_total = df_main.groupby('date')['cnt'].sum().sum()
-    st.metric('Total Rentals', value=daily_rent_total)
-
 # Membuat jumlah penyewaan bulanan
 st.subheader('Monthly Rentals')
 fig, ax = plt.subplots(figsize=(24, 8))
@@ -131,14 +111,14 @@ st.pyplot(fig)
 # Analisis berdasarkan Hari, Jam, dan Musim
 st.subheader("Penyewaan Sepeda Berdasarkan Hari, Jam, dan Musim")
 
-# Tren Penyewaan berdasarkan Tahun
-st.subheader("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
+# Penyewaan berdasarkan Jam
+st.subheader("Pola Penyewaan Sepeda per Jam")
 plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
-plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
-plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
-plt.xlabel("Bulan")
-plt.ylabel("Jumlah Penyewaan")
+sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", color="steelblue")
+plt.title('Pola Penyewaan Sepeda per Jam')
+plt.xlabel('Jam')
+plt.ylabel('Jumlah Penyewa')
+plt.xticks(range(0, 24))
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
 
@@ -152,17 +132,6 @@ plt.xlabel('Hari')
 plt.ylabel('Jumlah Penyewa')
 plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
 plt.grid(axis='y')
-st.pyplot(plt)  # Display the plot in Streamlit
-
-# Penyewaan berdasarkan Jam
-st.subheader("Pola Penyewaan Sepeda per Jam")
-plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", color="steelblue")
-plt.title('Pola Penyewaan Sepeda per Jam')
-plt.xlabel('Jam')
-plt.ylabel('Jumlah Penyewa')
-plt.xticks(range(0, 24))
-plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
 
 # Pengaruh Musim dan Cuaca
@@ -201,9 +170,6 @@ st.pyplot(plt)  # Display the plot in Streamlit
 
 # Peminjaman berdasarkan Musim dan Kategori Pengguna
 st.subheader("Peminjaman berdasarkan Musim dan Kategori Pengguna")
-season_map = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
-df_main['season_name'] = df_main['season'].map(season_map)
-
 plt.figure(figsize=(8, 5))
 sns.barplot(data=df_main, x='season_name', y='cnt', order=['Spring', 'Summer', 'Fall', 'Winter'], palette="viridis")
 plt.xlabel('Musim')
@@ -211,6 +177,7 @@ plt.ylabel('Jumlah Peminjaman')
 plt.title('Peminjaman Sepeda Berdasarkan Musim')
 plt.grid(axis='y')
 st.pyplot(plt)  # Display the plot in Streamlit
+
 
 ####
 
