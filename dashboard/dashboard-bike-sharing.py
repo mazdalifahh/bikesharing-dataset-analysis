@@ -65,6 +65,7 @@ st.metric("Total Rentals", df_filtered['cnt'].sum())
 st.metric("Average Rentals per Day", round(df_filtered['cnt'].mean(), 2))
 
 ## Tren Penyewaan Sepeda Sepanjang Tahun
+st.subheader("Tren Penyewaan Sepeda Sepanjang Tahun")
 
 # Pastikan kolom dteday sudah dalam format datetime
 df_main['dteday'] = pd.to_datetime(df_main['dteday'])
@@ -81,5 +82,36 @@ plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
 plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
 plt.xlabel("Bulan")
 plt.ylabel("Jumlah Penyewaan")
+plt.grid()
+st.pyplot(plt)  # Display the plot in Streamlit
+
+## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
+# Add header before subheader
+st.header("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
+st.subheader("Pola Penyewaan Sepeda Berdasarkan Hari dalam Seminggu")
+
+# Tambahkan kolom weekday (0 = Senin, 6 = Minggu)
+df_main['weekday'] = df_main['dteday'].dt.weekday  # 0 = Senin, 6 = Minggu
+
+# Plotkan boxplot untuk penyewaan sepeda berdasarkan hari dalam seminggu
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=df_main, x='weekday', y='cnt')
+plt.title('Penyewaan Sepeda Berdasarkan Hari dalam Seminggu')
+plt.xlabel('Hari')
+plt.ylabel('Jumlah Penyewa')
+plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
+plt.grid()
+st.pyplot(plt)  # Display the plot in Streamlit
+
+# Add subheader for this section
+st.subheader("Pola Penyewaan Sepeda Berdasarkan Jam")
+
+# Plotkan tren penyewaan sepeda per jam
+plt.figure(figsize=(10, 5))
+sns.lineplot(data=df_main, x='hr', y='cnt', marker="o")
+plt.title('Pola Penyewaan Sepeda per Jam')
+plt.xlabel('Jam')
+plt.ylabel('Jumlah Penyewa')
+plt.xticks(range(0, 24))
 plt.grid()
 st.pyplot(plt)  # Display the plot in Streamlit
