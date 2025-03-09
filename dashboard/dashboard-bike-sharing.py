@@ -170,62 +170,83 @@ st.pyplot(plt)  # Display the plot in Streamlit
 
 ## RFM Analysis
 import pandas as pd
-import datetime as dt
-
-# Asumsikan df_main adalah dataset utama yang berisi informasi transaksi
-# Pastikan kolom 'dteday' sudah dalam format datetime
-df_main['dteday'] = pd.to_datetime(df_main['dteday'])
-
-# 1. Recency: Menghitung waktu sejak transaksi terakhir
-current_date = df_main['dteday'].max()  # Tanggal terakhir transaksi
-df_main['Recency'] = (current_date - df_main['dteday']).dt.days
-
-# 2. Frequency: Menghitung jumlah transaksi per pelanggan (dianggap berdasarkan id atau user_id)
-# Jika tidak ada id pelanggan, bisa menggunakan index atau kolom lain yang sesuai
-df_main['Frequency'] = df_main.groupby('user_id')['dteday'].transform('count')
-
-# 3. Monetary: Menghitung total transaksi (jumlah penyewaan)
-df_main['Monetary'] = df_main.groupby('user_id')['cnt'].transform('sum')
-
-# Menampilkan dataframe RFM untuk pengecekan
-df_rfm = df_main[['user_id', 'Recency', 'Frequency', 'Monetary']].drop_duplicates()
-
-import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
+import streamlit as st
 
-# Menampilkan RFM analysis di Streamlit
-st.subheader("Analisis RFM (Recency, Frequency, Monetary)")
+# Misalkan df_main adalah dataframe yang sudah kamu load
+# df_main = pd.read_csv('data.csv') # Contoh pengambilan data
 
-# Menampilkan data RFM
+# Pastikan kolom 'dteday' dalam format datetime
+df_main['dteday'] = pd.to_datetime(df_main['dteday'])
+
+# 1. **Recency**: Menghitung Recency (waktu terakhir penyewaan)
+current_date = df_main['dteday'].max()  # Tanggal terakhir di dataset
+
+# Menghitung Recency
+df_main['Recency'] = (current_date - df_main['dteday']).dt.days
+
+# 2. **Frequency**: Menghitung jumlah penyewaan per hari
+df_main['Frequency'] = df_main['cnt']
+
+# 3. **Monetary**: Menghitung Monetary (jumlah penyewaan)
+df_main['Monetary'] = df_main['cnt']
+
+# Menampilkan RFM DataFrame (tanpa duplikat)
+df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary']].drop_duplicates()
+
+# 4. **Visualisasi RFM**
 st.write(df_rfm)
 
-# Visualisasi Recency (Histogram)
-st.subheader("Distribusi Recency")
-fig, ax = plt.subplots(figsize=(8, 5))
-sns.histplot(df_rfm['Recency'], kde=True, color='blue', ax=ax)
-ax.set_title('Distribusi Recency')
-ax.set_xlabel('Recency (Hari)')
-ax.set_ylabel('Frekuensi')
-st.pyplot(fig)
+# Visualisasi Recency
+plt.figure(figsize=(8, 5))
+sns.histplot(df_rfm['Recency'], kde=True, color='blue')
+plt.title('Distribusi Recency')
+plt.xlabel('Recency (hari terakhir penyewaan)')
+plt.ylabel('Frekuensi')
+plt.show()
 
-# Visualisasi Frequency (Histogram)
-st.subheader("Distribusi Frequency")
-fig, ax = plt.subplots(figsize=(8, 5))
-sns.histplot(df_rfm['Frequency'], kde=True, color='green', ax=ax)
-ax.set_title('Distribusi Frequency')
-ax.set_xlabel('Frequency')
-ax.set_ylabel('Frekuensi')
-st.pyplot(fig)
+# Visualisasi Frequency
+plt.figure(figsize=(8, 5))
+sns.histplot(df_rfm['Frequency'], kde=True, color='green')
+plt.title('Distribusi Frequency')
+plt.xlabel('Jumlah Penyewaan')
+plt.ylabel('Frekuensi')
+plt.show()
 
-# Visualisasi Monetary (Histogram)
-st.subheader("Distribusi Monetary")
-fig, ax = plt.subplots(figsize=(8, 5))
-sns.histplot(df_rfm['Monetary'], kde=True, color='orange', ax=ax)
-ax.set_title('Distribusi Monetary')
-ax.set_xlabel('Monetary')
-ax.set_ylabel('Frekuensi')
-st.pyplot(fig)
+# Visualisasi Monetary
+plt.figure(figsize=(8, 5))
+sns.histplot(df_rfm['Monetary'], kde=True, color='red')
+plt.title('Distribusi Monetary')
+plt.xlabel('Jumlah Penyewaan')
+plt.ylabel('Frekuensi')
+plt.show()
+
+# Untuk menambahkan analisis dalam Streamlit dashboard
+st.subheader("📊 RFM Analysis")
+st.write("RFM Analysis memberikan gambaran terkait Recency, Frequency, dan Monetary pengguna berdasarkan data penyewaan sepeda.")
+
+# Menampilkan dataframe RFM di Streamlit
+st.write(df_rfm)
+
+# Menampilkan grafik Recency, Frequency, dan Monetary di Streamlit
+st.pyplot(plt.figure(figsize=(8, 5)))
+sns.histplot(df_rfm['Recency'], kde=True, color='blue')
+plt.title('Distribusi Recency')
+plt.xlabel('Recency (hari terakhir penyewaan)')
+plt.ylabel('Frekuensi')
+
+st.pyplot(plt.figure(figsize=(8, 5)))
+sns.histplot(df_rfm['Frequency'], kde=True, color='green')
+plt.title('Distribusi Frequency')
+plt.xlabel('Jumlah Penyewaan')
+plt.ylabel('Frekuensi')
+
+st.pyplot(plt.figure(figsize=(8, 5)))
+sns.histplot(df_rfm['Monetary'], kde=True, color='red')
+plt.title('Distribusi Monetary')
+plt.xlabel('Jumlah Penyewaan')
+plt.ylabel('Frekuensi')
 
 
 
