@@ -1,11 +1,20 @@
-import streamlit as st  # Streamlit untuk membuat aplikasi web interaktif dengan Python
-import pandas as pd  # Pandas untuk manipulasi dan analisis data
-import matplotlib.pyplot as plt  # Matplotlib untuk membuat visualisasi data statis
-import seaborn as sns  # Seaborn untuk visualisasi data yang lebih menarik dan kompleks
-import plotly.express as px  # Plotly untuk visualisasi interaktif dan grafik kompleks
+import streamlit as st  
+import pandas as pd 
+import matplotlib.pyplot as plt  
+import seaborn as sns  
+import plotly.express as px  
 
 # Load Data
 df_main = pd.read_csv("dashboard/main_data.csv")
+
+# Group berdasarkan tipe pengguna dan tanggal untuk menghitung penyewaan harian
+daily_rent_casual = df_main[df_main['user_type'] == 'casual'].groupby('date')['cnt'].sum()
+daily_rent_registered = df_main[df_main['user_type'] == 'registered'].groupby('date')['cnt'].sum()
+
+# Tampilkan atau analisis data ini secara terpisah
+st.write('Penyewaan Harian (Casual):', daily_rent_casual)
+st.write('Penyewaan Harian (Registered):', daily_rent_registered)
+
 
 # Convert dteday to datetime
 df_main['dteday'] = pd.to_datetime(df_main['dteday'])
