@@ -110,6 +110,30 @@ color_discrete_map_cuaca = {
     "Heavy Rain": "#E377C2", "Snow": "#7F7F7F"
 }
 
+import plotly.express as px
+import streamlit as st
+
+# Warna yang berbeda untuk setiap kategori
+color_discrete_map_hari = {
+    "Sen": "#636EFA", "Sel": "#EF553B", "Rab": "#00CC96", 
+    "Kam": "#AB63FA", "Jum": "#FFA15A", "Sab": "#19D3F3", "Min": "#FF6692"
+}
+color_discrete_map_musim = {
+    "Spring": "#FF7F0E", "Summer": "#2CA02C", "Fall": "#D62728", "Winter": "#9467BD"
+}
+color_discrete_map_cuaca = {
+    "Clear": "#1F77B4", "Cloudy": "#FFBB78", "Light Rain": "#8C564B", 
+    "Heavy Rain": "#E377C2", "Snow": "#7F7F7F"
+}
+
+# Penjelasan untuk Boxplot Penyewaan per Hari
+st.markdown("""
+### Penyewaan Sepeda Berdasarkan Hari dalam Seminggu
+Grafik ini menunjukkan **distribusi jumlah penyewaan sepeda** untuk setiap hari dalam seminggu:
+- **Kotak menunjukkan rentang utama data (kuartil 25%-75%)**, sedangkan garis di tengahnya menunjukkan **median (nilai tengah)**.
+- **Titik-titik di luar kotak adalah outlier**, yang berarti jumlah penyewaan di hari itu jauh lebih tinggi atau rendah dibanding biasanya.
+""")
+
 # Boxplot - Tren Penyewaan per Hari dalam Seminggu
 fig3 = px.box(df_main, x='weekday', y='cnt', 
               title='Penyewaan Sepeda Berdasarkan Hari dalam Seminggu', 
@@ -123,6 +147,14 @@ fig3.update_xaxes(tickvals=list(range(7)),
 fig3.update_traces(marker=dict(opacity=0.5), line=dict(width=2))
 st.plotly_chart(fig3)
 
+# Penjelasan untuk Boxplot Pengaruh Musim
+st.markdown("""
+### Pengaruh Musim terhadap Penyewaan Sepeda
+Grafik ini menunjukkan bagaimana jumlah penyewaan sepeda **bervariasi berdasarkan musim**.
+- **Setiap warna mewakili musim yang berbeda**.
+- Seperti sebelumnya, **kotak menunjukkan persebaran utama data**, dan **outlier ditampilkan sebagai titik-titik di luar kotak**.
+""")
+
 # Boxplot - Pengaruh Musim terhadap Penyewaan
 fig5 = px.box(df_main, x='season_name', y='cnt', 
               title='Pengaruh Musim terhadap Penyewaan Sepeda', 
@@ -133,6 +165,14 @@ fig5 = px.box(df_main, x='season_name', y='cnt',
              )
 fig5.update_traces(marker=dict(opacity=0.5), line=dict(width=2))
 st.plotly_chart(fig5)
+
+# Penjelasan untuk Boxplot Pengaruh Cuaca
+st.markdown("""
+### Pengaruh Cuaca terhadap Penyewaan Sepeda
+Grafik ini menunjukkan bagaimana jumlah penyewaan sepeda **dipengaruhi oleh kondisi cuaca**.
+- **Setiap warna mewakili kondisi cuaca yang berbeda**.
+- **Distribusi data ditampilkan dengan kotak dan garis median**, serta outlier yang ditampilkan sebagai titik-titik.
+""")
 
 # Boxplot - Pengaruh Cuaca terhadap Penyewaan
 fig6 = px.box(df_main, x='weather_desc', y='cnt', 
