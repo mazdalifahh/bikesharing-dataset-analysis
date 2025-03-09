@@ -75,10 +75,27 @@ plt.ylabel("Jumlah Penyewaan")
 plt.grid()
 st.pyplot(plt)  # Display the static plot in Streamlit
 
+import plotly.express as px
+
 # Plot interaktif dengan Plotly
-fig = px.line(df_main, x='month', y='cnt', title="Tren Penyewaan Sepeda per Bulan (2011-2012)", labels={"month": "Bulan", "cnt": "Jumlah Penyewaan"})
-fig.update_xaxes(tickmode='linear', tick0=1, dtick=1)  # Menampilkan angka bulan 1-12
-st.plotly_chart(fig)  # Display the interactive plot in Streamlit
+fig = px.line(df_main, x='month', y='cnt', title="Tren Penyewaan Sepeda per Bulan (2011-2012)",
+              labels={"month": "Bulan", "cnt": "Jumlah Penyewaan"})
+
+# Mengatur tampilan sumbu X agar bulan tampil dengan benar (1-12)
+fig.update_xaxes(tickmode='array', tickvals=list(range(1, 13)), ticktext=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+
+# Mengaktifkan grid dan garis
+fig.update_layout(
+    xaxis=dict(tickmode='linear'),
+    title="Tren Penyewaan Sepeda per Bulan (2011-2012)",
+    plot_bgcolor='white',  # Latar belakang putih untuk plot
+    xaxis_title="Bulan",
+    yaxis_title="Jumlah Penyewaan",
+    showlegend=False  # Tidak menampilkan legenda, jika tidak diperlukan
+)
+
+# Tampilkan plot di Streamlit
+st.plotly_chart(fig)
 
 ##Penyewaan Sepeda Berdasarkan hari dan jam
 # Pilih warna tunggal untuk semua bar
