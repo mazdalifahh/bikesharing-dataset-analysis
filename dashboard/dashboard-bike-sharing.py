@@ -97,30 +97,40 @@ fig4 = px.line(df_hour_avg, x='hr', y='cnt', markers=True,
 # Menampilkan grafik di Streamlit
 st.plotly_chart(fig4)
 
-
 # Boxplot - Tren Penyewaan per Hari dalam Seminggu
-fig3 = px.box(df_main, x='weekday', y='cnt', title='Penyewaan Sepeda Berdasarkan Hari dalam Seminggu', labels={'weekday': 'Hari', 'cnt': 'Jumlah Penyewa'})
-fig3.update_xaxes(tickvals=list(range(7)), ticktext=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
+fig3 = px.box(df_main, x='weekday', y='cnt', 
+              title='Penyewaan Sepeda Berdasarkan Hari dalam Seminggu', 
+              labels={'weekday': 'Hari', 'cnt': 'Jumlah Penyewa'},
+              color='weekday',  # Tambahkan warna untuk tiap hari agar lebih jelas
+              points="all"  # Menampilkan semua titik outlier
+             )
+fig3.update_xaxes(tickvals=list(range(7)), 
+                  ticktext=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
+fig3.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
+fig3.update_traces(line=dict(width=2))  # Perjelas garis median
 st.plotly_chart(fig3)
 
 # Boxplot - Pengaruh Musim terhadap Penyewaan
 fig5 = px.box(df_main, x='season_name', y='cnt', 
               title='Pengaruh Musim terhadap Penyewaan Sepeda', 
-              color='season_name',
-              labels={'season_name': 'Musim', 'cnt': 'Jumlah Penyewaan'})
-
+              color='season_name',  # Warna per musim
+              labels={'season_name': 'Musim', 'cnt': 'Jumlah Penyewaan'},
+              points="all"
+             )
+fig5.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
+fig5.update_traces(line=dict(width=2))  # Perjelas garis median
 st.plotly_chart(fig5)
 
 # Boxplot - Pengaruh Cuaca terhadap Penyewaan
 fig6 = px.box(df_main, x='weather_desc', y='cnt', 
               title='Pengaruh Cuaca terhadap Penyewaan Sepeda', 
-              color='weather_desc',
-              labels={'weather_desc': 'Kondisi Cuaca', 'cnt': 'Jumlah Penyewaan'})
-
+              color='weather_desc',  # Warna per kondisi cuaca
+              labels={'weather_desc': 'Kondisi Cuaca', 'cnt': 'Jumlah Penyewaan'},
+              points="all"
+             )
+fig6.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
+fig6.update_traces(line=dict(width=2))  # Perjelas garis median
 st.plotly_chart(fig6)
-
-
-plt.ylabel("Jumlah Penyewaan")
 
 # Barplot - Peminjaman Hari Kerja vs Hari Libur
 fig7 = px.bar(df_main, x='workingday', y='cnt', title='Peminjaman Sepeda pada Hari Kerja vs Hari Libur', labels={'workingday': 'Hari', 'cnt': 'Jumlah Peminjaman'})
