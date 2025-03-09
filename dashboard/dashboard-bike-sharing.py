@@ -236,17 +236,8 @@ plt.title('Distribusi Recency')
 plt.xlabel('Recency (hari terakhir penyewaan)')
 plt.ylabel('Frekuensi')
 
-st.pyplot(plt.figure(figsize=(8, 5)))
-sns.histplot(df_rfm['Frequency'], kde=True, color='green')
-plt.title('Distribusi Frequency')
-plt.xlabel('Jumlah Penyewaan')
-plt.ylabel('Frekuensi')
 
-st.pyplot(plt.figure(figsize=(8, 5)))
-sns.histplot(df_rfm['Monetary'], kde=True, color='red')
-plt.title('Distribusi Monetary')
-plt.xlabel('Jumlah Penyewaan')
-plt.ylabel('Frekuensi')
+
 
 
 
