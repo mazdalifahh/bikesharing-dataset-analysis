@@ -64,16 +64,21 @@ df_main['dteday'] = pd.to_datetime(df_main['dteday'])
 df_main['year'] = df_main['dteday'].dt.year
 df_main['month'] = df_main['dteday'].dt.month
 
-# Plot dengan hue berdasarkan tahun
+# Plot dengan berdasarkan tahun
+# Plot statis dengan seaborn (untuk referensi)
 plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
-
+sns.lineplot(data=df_main, x='month', y='cnt', marker="o", color="steelblue")
 plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
-plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
+plt.title("Tren Penyewaan Sepeda per Bulan (2011-2012)")
 plt.xlabel("Bulan")
 plt.ylabel("Jumlah Penyewaan")
 plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
+st.pyplot(plt)  # Display the static plot in Streamlit
+
+# Plot interaktif dengan Plotly
+fig = px.line(df_main, x='month', y='cnt', title="Tren Penyewaan Sepeda per Bulan (2011-2012)", labels={"month": "Bulan", "cnt": "Jumlah Penyewaan"})
+fig.update_xaxes(tickmode='linear', tick0=1, dtick=1)  # Menampilkan angka bulan 1-12
+st.plotly_chart(fig)  # Display the interactive plot in Streamlit
 
 ##Penyewaan Sepeda Berdasarkan hari dan jam
 # Pilih warna tunggal untuk semua bar
