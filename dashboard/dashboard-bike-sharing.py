@@ -43,7 +43,6 @@ image_path = "dashboard/assets/Logo.png"
 st.sidebar.image(image_path, use_column_width=True)
 
 # Sidebar
-st.sidebar.subheader("📌 Filter Data")
 date_range = st.sidebar.date_input("Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
 
 # Filter Data
