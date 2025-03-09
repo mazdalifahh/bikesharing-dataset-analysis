@@ -39,7 +39,7 @@ Data ini membantu memahami bagaimana faktor-faktor seperti waktu, cuaca, dan mus
 """)
 
 # Add Pict
-image_path = "/Users/mazdalifahh/Downloads/Bike-2.png"
+image_path = "dashboard/assets/Logo.png"
 st.sidebar.image(image_path, use_column_width=True)
 
 # Sidebar
