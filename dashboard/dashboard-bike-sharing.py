@@ -65,7 +65,7 @@ df_main['year'] = df_main['dteday'].dt.year
 df_main['month'] = df_main['dteday'].dt.month
 
 ####
-
+'''
 # Plot dengan berdasarkan tahun
 # Plot dengan hue berdasarkan tahun
 plt.figure(figsize=(10, 5))
@@ -178,6 +178,7 @@ plt.title('Peminjaman Sepeda Berdasarkan Musim')
 plt.grid(axis='y')
 plt.show()
 st.pyplot(plt)  # Display the plot in Streamlit
+'''
 
 ####
 
@@ -377,13 +378,4 @@ st.write(df_rfm)
 
 # Menambahkan keterangan copyright di footer
 st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
-
-
-
-
-
-
-
-
-
 
