@@ -44,12 +44,10 @@ st.sidebar.image(image_path, use_column_width=True)
 
 # Sidebar
 st.sidebar.subheader("📌 Filter Data")
-year_option = st.sidebar.selectbox("Pilih Tahun", options=df_main['year'].unique())
 date_range = st.sidebar.date_input("Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
 
 # Filter Data
 df_filtered = df_main.loc[
-    (df_main['year'] == year_option) &
     (df_main['dteday'].between(pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])))
 ]
 
