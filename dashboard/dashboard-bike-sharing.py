@@ -65,40 +65,16 @@ df_main['year'] = df_main['dteday'].dt.year
 df_main['month'] = df_main['dteday'].dt.month
 
 # Plot dengan berdasarkan tahun
-# Pastikan 'dteday' adalah kolom dengan tipe datetime
-df_main['dteday'] = pd.to_datetime(df_main['dteday'])
+# Plot dengan hue berdasarkan tahun
+plt.figure(figsize=(10, 5))
+sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
 
-# Sidebar untuk memilih rentang waktu
-date_range = st.sidebar.date_input("Pilih Rentang Waktu", 
-                                  [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
-
-# Filter data berdasarkan rentang tanggal yang dipilih
-df_filtered = df_main[(df_main['dteday'] >= pd.to_datetime(date_range[0])) & 
-                      (df_main['dteday'] <= pd.to_datetime(date_range[1]))]
-
-# Menambahkan kolom bulan agar bisa digunakan dalam visualisasi
-df_filtered['month'] = df_filtered['dteday'].dt.month
-
-# Plot interaktif dengan Plotly
-fig = px.line(df_filtered, x='month', y='cnt', color='year', title="Tren Penyewaan Sepeda per Bulan",
-              labels={"month": "Bulan", "cnt": "Jumlah Penyewaan"})
-
-# Mengatur tampilan sumbu X agar bulan tampil dengan benar (1-12)
-fig.update_xaxes(tickmode='array', tickvals=list(range(1, 13)), ticktext=["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                                                                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
-
-# Menambahkan pengaturan untuk grid dan desain lainnya
-fig.update_layout(
-    xaxis=dict(tickmode='linear'),
-    title="Tren Penyewaan Sepeda per Bulan",
-    plot_bgcolor='white',  # Latar belakang putih untuk plot
-    xaxis_title="Bulan",
-    yaxis_title="Jumlah Penyewaan",
-    showlegend=True  # Menampilkan legenda berdasarkan tahun
-)
-
-# Tampilkan plot di Streamlit
-st.plotly_chart(fig)
+plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
+plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
+plt.xlabel("Bulan")
+plt.ylabel("Jumlah Penyewaan")
+plt.grid()
+st.pyplot(plt)  # Display the plot in Streamlit
 
 ##Penyewaan Sepeda Berdasarkan hari dan jam
 # Pilih warna tunggal untuk semua bar
