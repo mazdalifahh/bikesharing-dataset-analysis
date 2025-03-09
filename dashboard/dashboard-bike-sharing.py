@@ -222,6 +222,51 @@ fig_rfm = px.scatter(df_rfm, x='Recency', y='Frequency',
 
 st.plotly_chart(fig_rfm)
 
+# Buat DataFrame RFM berdasarkan tanggal
+latest_date = df_main['dteday'].max()
+
+df_rfm = df_main.groupby('dteday').agg({
+    'cnt': ['sum', 'count'],  # Monetary (Total penyewaan) & Frequency (Jumlah transaksi dalam sehari)
+}).reset_index()
+
+df_rfm.columns = ['Date', 'Monetary', 'Frequency']
+
+# Hitung Recency sebagai selisih dari tanggal terbaru
+df_rfm['Recency'] = (latest_date - df_rfm['Date']).dt.days
+
+# Sort dan pilih 5 terbaik
+top_recency = df_rfm.sort_values(by="Recency", ascending=True).head(5)
+top_frequency = df_rfm.sort_values(by="Frequency", ascending=False).head(5)
+top_monetary = df_rfm.sort_values(by="Monetary", ascending=False).head(5)
+
+# Buat figure
+fig, ax = plt.subplots(nrows=1, ncols=3, figsize=(30, 6))
+colors = ["#72BCD4"] * 5  # Warna uniform
+
+# Recency Plot
+sns.barplot(y="Recency", x="Date", data=top_recency, palette=colors, ax=ax[0])
+ax[0].set_ylabel(None)
+ax[0].set_xlabel(None)
+ax[0].set_title("By Recency (days)", loc="center", fontsize=18)
+ax[0].tick_params(axis='x', labelsize=12, rotation=45)
+
+# Frequency Plot
+sns.barplot(y="Frequency", x="Date", data=top_frequency, palette=colors, ax=ax[1])
+ax[1].set_ylabel(None)
+ax[1].set_xlabel(None)
+ax[1].set_title("By Frequency", loc="center", fontsize=18)
+ax[1].tick_params(axis='x', labelsize=12, rotation=45)
+
+# Monetary Plot
+sns.barplot(y="Monetary", x="Date", data=top_monetary, palette=colors, ax=ax[2])
+ax[2].set_ylabel(None)
+ax[2].set_xlabel(None)
+ax[2].set_title("By Monetary", loc="center", fontsize=18)
+ax[2].tick_params(axis='x', labelsize=12, rotation=45)
+
+plt.suptitle("Top 5 Days Based on RFM Parameters", fontsize=20)
+plt.show()
+
 # Binning Kategori Penyewaan
 # Menentukan batas bin berdasarkan kuantil
 bins = df_main['cnt'].quantile([0, 0.25, 0.5, 0.75, 1]).values
