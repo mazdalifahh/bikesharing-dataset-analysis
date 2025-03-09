@@ -169,4 +169,6 @@ df_main['Kategori Penyewaan'] = pd.cut(df_main['cnt'], bins=bins, labels=labels,
 
 # Menampilkan hasil binning
 st.subheader("📌 Kategori Penyewaan")
-st.write(df_main['Kategori Penyewaan'].value_counts())
+st.write(df_main['Kategori Penyewaan'].value_counts()) 
+
+# komentar
