@@ -97,39 +97,52 @@ fig4 = px.line(df_hour_avg, x='hr', y='cnt', markers=True,
 # Menampilkan grafik di Streamlit
 st.plotly_chart(fig4)
 
+# Warna yang berbeda untuk setiap kategori
+color_discrete_map_hari = {
+    "Sen": "#636EFA", "Sel": "#EF553B", "Rab": "#00CC96", 
+    "Kam": "#AB63FA", "Jum": "#FFA15A", "Sab": "#19D3F3", "Min": "#FF6692"
+}
+color_discrete_map_musim = {
+    "Spring": "#FF7F0E", "Summer": "#2CA02C", "Fall": "#D62728", "Winter": "#9467BD"
+}
+color_discrete_map_cuaca = {
+    "Clear": "#1F77B4", "Cloudy": "#FFBB78", "Light Rain": "#8C564B", 
+    "Heavy Rain": "#E377C2", "Snow": "#7F7F7F"
+}
+
 # Boxplot - Tren Penyewaan per Hari dalam Seminggu
 fig3 = px.box(df_main, x='weekday', y='cnt', 
               title='Penyewaan Sepeda Berdasarkan Hari dalam Seminggu', 
               labels={'weekday': 'Hari', 'cnt': 'Jumlah Penyewa'},
-              color='weekday',  # Tambahkan warna untuk tiap hari agar lebih jelas
-              points="all"  # Menampilkan semua titik outlier
+              color='weekday',  
+              color_discrete_map=color_discrete_map_hari,  # Warna khusus untuk hari
+              points="all"
              )
 fig3.update_xaxes(tickvals=list(range(7)), 
                   ticktext=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
-fig3.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
-fig3.update_traces(line=dict(width=2))  # Perjelas garis median
+fig3.update_traces(marker=dict(opacity=0.5), line=dict(width=2))
 st.plotly_chart(fig3)
 
 # Boxplot - Pengaruh Musim terhadap Penyewaan
 fig5 = px.box(df_main, x='season_name', y='cnt', 
               title='Pengaruh Musim terhadap Penyewaan Sepeda', 
-              color='season_name',  # Warna per musim
+              color='season_name',
+              color_discrete_map=color_discrete_map_musim,  # Warna khusus musim
               labels={'season_name': 'Musim', 'cnt': 'Jumlah Penyewaan'},
               points="all"
              )
-fig5.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
-fig5.update_traces(line=dict(width=2))  # Perjelas garis median
+fig5.update_traces(marker=dict(opacity=0.5), line=dict(width=2))
 st.plotly_chart(fig5)
 
 # Boxplot - Pengaruh Cuaca terhadap Penyewaan
 fig6 = px.box(df_main, x='weather_desc', y='cnt', 
               title='Pengaruh Cuaca terhadap Penyewaan Sepeda', 
-              color='weather_desc',  # Warna per kondisi cuaca
+              color='weather_desc',
+              color_discrete_map=color_discrete_map_cuaca,  # Warna khusus cuaca
               labels={'weather_desc': 'Kondisi Cuaca', 'cnt': 'Jumlah Penyewaan'},
               points="all"
              )
-fig6.update_traces(marker=dict(opacity=0.5))  # Kurangi opacity titik outlier
-fig6.update_traces(line=dict(width=2))  # Perjelas garis median
+fig6.update_traces(marker=dict(opacity=0.5), line=dict(width=2))
 st.plotly_chart(fig6)
 
 # Barplot - Peminjaman Hari Kerja vs Hari Libur
