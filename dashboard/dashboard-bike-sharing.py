@@ -65,79 +65,30 @@ st.metric("Total Rentals", df_filtered['cnt'].sum())
 st.metric("Average Rentals per Day", round(df_filtered['cnt'].mean(), 2))
 
 ## Tren Penyewaan Sepeda Sepanjang Tahun
+# Add subheader for this section
 st.subheader("Tren Penyewaan Sepeda Sepanjang Tahun")
 
-# Pastikan kolom dteday sudah dalam format datetime
-df_main['dteday'] = pd.to_datetime(df_main['dteday'])
+# Plotly line plot untuk tren penyewaan sepeda sepanjang tahun
+fig = px.line(df_main, x='month', y='cnt', color='year',
+              labels={'month': 'Bulan', 'cnt': 'Jumlah Penyewaan'},
+              title="Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
+fig.update_xaxes(tickmode='array', tickvals=list(range(1, 13)), ticktext=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+st.plotly_chart(fig)  # Display the plot in Streamlit
 
-# Tambahkan kolom tahun & bulan
-df_main['year'] = df_main['dteday'].dt.year
-df_main['month'] = df_main['dteday'].dt.month
-
-# Plot dengan hue berdasarkan tahun
-plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
-
-plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
-plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
-plt.xlabel("Bulan")
-plt.ylabel("Jumlah Penyewaan")
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
-
-## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
-st.subheader("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari dan Jam")
-
+# Plotly bar plot untuk penyewaan sepeda berdasarkan hari
 # Group by 'weekday' to get average count of rentals per day
 daily_rentals = df_main.groupby('weekday')['cnt'].mean().reset_index()
 
-# Plot bar chart for daily rentals
-plt.figure(figsize=(10, 5))
-sns.barplot(data=daily_rentals, x='weekday', y='cnt', palette="Blues_d")
-plt.title('Penyewaan Sepeda Berdasarkan Hari dalam Seminggu')
-plt.xlabel('Hari')
-plt.ylabel('Jumlah Penyewa')
-plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
-plt.grid(axis='y')
-st.pyplot(plt)  # Display the plot in Streamlit
+# Add labels for weekdays
+daily_rentals['weekday_label'] = daily_rentals['weekday'].map({0: 'Sen', 1: 'Sel', 2: 'Rab', 3: 'Kam', 4: 'Jum', 5: 'Sab', 6: 'Min'})
 
-# Plotkan tren penyewaan sepeda per jam
-plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='hr', y='cnt', marker="o")
-plt.title('Pola Penyewaan Sepeda per Jam')
-plt.xlabel('Jam')
-plt.ylabel('Jumlah Penyewa')
-plt.xticks(range(0, 24))
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
+# Plotly bar plot untuk penyewaan sepeda berdasarkan hari
+fig = px.bar(daily_rentals, x='weekday_label', y='cnt', 
+             labels={'weekday_label': 'Hari', 'cnt': 'Jumlah Penyewa'},
+             title="Penyewaan Sepeda Berdasarkan Hari dalam Seminggu", 
+             color='weekday_label')
+fig.update_xaxes(tickmode='array', tickvals=daily_rentals['weekday_label'], ticktext=daily_rentals['weekday_label'])
+st.plotly_chart(fig)  # Display the plot in Streamlit
 
-## Musim dan Cuaca
-# Add subheader for this section
-st.subheader("Pengaruh Musim dan Cuaca terhadap Penyewaan Sepeda")
 
-# Plot boxplot untuk pengaruh musim terhadap penyewaan sepeda
-plt.figure(figsize=(8, 5))
-sns.boxplot(data=df_main, x='season', y='cnt', hue='season', palette="pastel", dodge=False)
-
-# Label musim
-plt.xticks([0, 1, 2, 3], ["Spring", "Summer", "Fall", "Winter"])  # Ubah angka jadi label musim
-plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
-plt.xlabel("Musim")
-plt.ylabel("Jumlah Penyewaan")
-plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
-
-# Plot boxplot untuk pengaruh cuaca terhadap penyewaan sepeda
-plt.figure(figsize=(8, 5))
-sns.boxplot(data=df_main, x='weathersit', y='cnt', hue='weathersit', palette="pastel", dodge=False)
-
-# Label cuaca
-plt.xticks([0, 1, 2, 3], ["Clear", "Mist", "Light Snow/Rain", "Heavy Rain/Snow"])  # Ubah angka jadi label deskriptif cuaca
-plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
-plt.xlabel("Kondisi Cuaca")
-plt.ylabel("Jumlah Penyewa")
-plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
 
