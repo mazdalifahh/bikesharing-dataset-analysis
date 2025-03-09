@@ -151,6 +151,7 @@ plt.ylabel('Jumlah Peminjaman')
 plt.title('Peminjaman Sepeda pada Hari Kerja vs Hari Libur')
 plt.grid(axis='y')
 plt.show()
+st.pyplot(plt)  # Display the plot in Streamlit
 
 ## Analisis Peminjaman berdasarkan Musim dan kategori Pengguna
 # Add subheader for this section
@@ -168,6 +169,7 @@ plt.ylabel('Jumlah Peminjaman')
 plt.title('Peminjaman Sepeda Berdasarkan Musim')
 plt.grid(axis='y')
 plt.show()
+st.pyplot(plt)  # Display the plot in Streamlit
 
 
 
