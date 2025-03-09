@@ -168,5 +168,66 @@ plt.grid(axis='y')
 plt.show()
 st.pyplot(plt)  # Display the plot in Streamlit
 
+## RFM Analysis
+import pandas as pd
+import datetime as dt
+
+# Asumsikan df_main adalah dataset utama yang berisi informasi transaksi
+# Pastikan kolom 'dteday' sudah dalam format datetime
+df_main['dteday'] = pd.to_datetime(df_main['dteday'])
+
+# 1. Recency: Menghitung waktu sejak transaksi terakhir
+current_date = df_main['dteday'].max()  # Tanggal terakhir transaksi
+df_main['Recency'] = (current_date - df_main['dteday']).dt.days
+
+# 2. Frequency: Menghitung jumlah transaksi per pelanggan (dianggap berdasarkan id atau user_id)
+# Jika tidak ada id pelanggan, bisa menggunakan index atau kolom lain yang sesuai
+df_main['Frequency'] = df_main.groupby('user_id')['dteday'].transform('count')
+
+# 3. Monetary: Menghitung total transaksi (jumlah penyewaan)
+df_main['Monetary'] = df_main.groupby('user_id')['cnt'].transform('sum')
+
+# Menampilkan dataframe RFM untuk pengecekan
+df_rfm = df_main[['user_id', 'Recency', 'Frequency', 'Monetary']].drop_duplicates()
+
+import streamlit as st
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Menampilkan RFM analysis di Streamlit
+st.subheader("Analisis RFM (Recency, Frequency, Monetary)")
+
+# Menampilkan data RFM
+st.write(df_rfm)
+
+# Visualisasi Recency (Histogram)
+st.subheader("Distribusi Recency")
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.histplot(df_rfm['Recency'], kde=True, color='blue', ax=ax)
+ax.set_title('Distribusi Recency')
+ax.set_xlabel('Recency (Hari)')
+ax.set_ylabel('Frekuensi')
+st.pyplot(fig)
+
+# Visualisasi Frequency (Histogram)
+st.subheader("Distribusi Frequency")
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.histplot(df_rfm['Frequency'], kde=True, color='green', ax=ax)
+ax.set_title('Distribusi Frequency')
+ax.set_xlabel('Frequency')
+ax.set_ylabel('Frekuensi')
+st.pyplot(fig)
+
+# Visualisasi Monetary (Histogram)
+st.subheader("Distribusi Monetary")
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.histplot(df_rfm['Monetary'], kde=True, color='orange', ax=ax)
+ax.set_title('Distribusi Monetary')
+ax.set_xlabel('Monetary')
+ax.set_ylabel('Frekuensi')
+st.pyplot(fig)
+
+
+
 
 
