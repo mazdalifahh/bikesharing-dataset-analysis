@@ -6,7 +6,7 @@ import seaborn as sns  # Seaborn untuk visualisasi data yang lebih menarik dan k
 import plotly.express as px  # Plotly untuk visualisasi interaktif dan grafik kompleks
 
 # Load Data
-df_main = pd.read_csv("main_data.csv")
+df_main = pd.read_csv("dashboard/main_data.csv")
 
 # Convert dteday to datetime
 df_main['dteday'] = pd.to_datetime(df_main['dteday'])
