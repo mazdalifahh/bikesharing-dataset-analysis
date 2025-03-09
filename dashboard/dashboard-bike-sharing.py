@@ -1,6 +1,5 @@
 import streamlit as st  # Streamlit untuk membuat aplikasi web interaktif dengan Python
 import pandas as pd  # Pandas untuk manipulasi dan analisis data
-import numpy as np  # NumPy untuk komputasi numerik dan array multidimensi
 import matplotlib.pyplot as plt  # Matplotlib untuk membuat visualisasi data statis
 import seaborn as sns  # Seaborn untuk visualisasi data yang lebih menarik dan kompleks
 import plotly.express as px  # Plotly untuk visualisasi interaktif dan grafik kompleks
@@ -27,10 +26,8 @@ st.title("🚴‍♂️ Bike Sharing Data Dashboard")
 
 # Penjelasan Singkat
 st.markdown("""
-
 **Selamat datang di dashboard Bike Sharing!**  
 Dashboard ini memungkinkan Anda untuk mengeksplorasi tren penggunaan sepeda berdasarkan data peminjaman dari sistem bike sharing. Temukan pola-pola menarik, seperti:
-
 - **Jumlah penyewaan sepeda** berdasarkan **bulan**, **hari**, dan **jam**.
 - **Pengaruh cuaca** dan **musim** terhadap peminjaman sepeda.
 - **Perbandingan hari kerja dan libur** dalam peminjaman sepeda.
@@ -178,15 +175,9 @@ plt.title('Peminjaman Sepeda Berdasarkan Musim')
 plt.grid(axis='y')
 st.pyplot(plt)  # Display the plot in Streamlit
 
-
 ####
 
 ## Binning dan RFM Analysis
-
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import streamlit as st
 
 # Misalkan df_main adalah dataframe yang sudah kamu load
 # df_main = pd.read_csv('data.csv') # Contoh pengambilan data
@@ -218,7 +209,7 @@ df_main['Registered_Category'] = pd.cut(df_main['registered'], bins=[0, 500, 150
 # Menampilkan RFM DataFrame (tanpa duplikat)
 df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary', 'Casual_Category', 'Registered_Category']].drop_duplicates()
 
-# Menampilkan DataFrame RFM di Streamlit
+# Menampilkan RFM DataFrame di Streamlit
 st.subheader("📊 RFM Analysis with Binning")
 st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Registered.")
 
@@ -226,5 +217,4 @@ st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Regis
 st.write(df_rfm)
 
 # Menambahkan keterangan copyright di footer
-st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
-
+st.caption('Copyright (c) Mazdal
