@@ -58,17 +58,39 @@ st.pyplot(plt)
 
 # 2. Pola Penyewaan Berdasarkan Hari & Jam
 st.subheader("⏰ Pola Penyewaan Berdasarkan Hari & Jam")
-hourly_trend = df_filtered.groupby(['hr', 'weekday'])['cnt'].mean().reset_index()
+
+# Urutan hari dalam bahasa Inggris
+weekday_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+# Buat color mapping untuk memastikan warna sesuai
+colors = sns.color_palette("Set1", n_colors=7)
+color_map = dict(zip(weekday_order, colors))
+
+# Plot line chart
 plt.figure(figsize=(12, 5))
-sns.lineplot(data=hourly_trend, x="hr", y="cnt", hue="weekday", palette="Set1", linewidth=2.5, marker="o")
+ax = sns.lineplot(
+    data=hourly_trend, 
+    x="hr", y="cnt", 
+    hue="weekday", 
+    palette=color_map,  # Gunakan warna yang sudah dipetakan
+    linewidth=2.5, marker="o"
+)
+
+# Highlight jam sibuk
 plt.axvspan(7, 9, color='gray', alpha=0.2, label="Jam Sibuk Pagi")
 plt.axvspan(16, 18, color='gray', alpha=0.2, label="Jam Sibuk Sore")
+
+# Perbaiki legenda agar warna sesuai dengan garis
+handles, labels = ax.get_legend_handles_labels()
+plt.legend(handles=handles, labels=weekday_order, title="Hari")
+
+# Tambahkan label dan grid
 plt.title("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari untuk Setiap Hari")
 plt.xlabel("Jam")
 plt.ylabel("Jumlah Penyewaan")
 plt.xticks(ticks=range(0, 24, 2))
-plt.legend(title="Hari", labels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
 plt.grid()
+
 st.pyplot(plt)
 
 # 3. Pengaruh Musim & Cuaca terhadap Penyewaan
