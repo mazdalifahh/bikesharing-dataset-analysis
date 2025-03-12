@@ -73,20 +73,35 @@ st.pyplot(plt)
 
 # 3. Pengaruh Musim & Cuaca terhadap Penyewaan
 st.subheader("🌦️ Pengaruh Musim & Cuaca terhadap Penyewaan")
+
+# Boxplot Musim
 plt.figure(figsize=(12, 5))
-sns.boxplot(data=df_filtered, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
+ax = sns.boxplot(data=df_filtered, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
 plt.xticks(ticks=[0, 1, 2, 3], labels=['Spring', 'Summer', 'Fall', 'Winter'])
 plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 plt.xlabel("Musim")
 plt.ylabel("Jumlah Penyewaan")
+
+# Menambahkan label angka di atas setiap boxplot
+season_means = df_filtered.groupby('season')['cnt'].mean()
+for i, mean in enumerate(season_means):
+    plt.text(i, mean, f'{int(mean)}', ha='center', va='bottom', fontsize=10)
+
 st.pyplot(plt)
 
+# Boxplot Cuaca
 plt.figure(figsize=(12, 5))
-sns.boxplot(data=df_filtered, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
+ax = sns.boxplot(data=df_filtered, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
 plt.xticks(ticks=[0, 1, 2, 3], labels=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
 plt.xlabel("Kondisi Cuaca")
 plt.ylabel("Jumlah Penyewaan")
+
+# Menambahkan label angka di atas setiap boxplot
+weather_means = df_filtered.groupby('weathersit')['cnt'].mean()
+for i, mean in enumerate(weather_means):
+    plt.text(i, mean, f'{int(mean)}', ha='center', va='bottom', fontsize=10)
+
 st.pyplot(plt)
 
 # 4. Perbandingan Penyewaan antara Hari Kerja & Hari Libur
@@ -102,7 +117,13 @@ st.pyplot(plt)
 # 5. Distribusi Pengguna Sepeda (Casual vs. Registered)
 st.subheader("👥 Distribusi Pengguna Sepeda (Casual vs. Registered)")
 plt.figure(figsize=(12, 5))
-df_filtered[['casual', 'registered']].sum().plot(kind='bar', color=['lightblue', 'salmon'])
+ax = df_filtered[['casual', 'registered']].sum().plot(kind='bar', color=['lightblue', 'salmon'])
+
+# Menambahkan label angka di atas setiap batang
+totals = df_filtered[['casual', 'registered']].sum()
+for i, total in enumerate(totals):
+    plt.text(i, total, f'{int(total)}', ha='center', va='bottom', fontsize=12)
+
 plt.title("Distribusi Pengguna Sepeda (Casual vs. Registered)")
 plt.ylabel("Total Pengguna")
 plt.xticks(rotation=0)
