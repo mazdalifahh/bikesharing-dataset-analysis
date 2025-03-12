@@ -1,12 +1,11 @@
-import streamlit as st  # Streamlit untuk membuat aplikasi web interaktif dengan Python
-import pandas as pd  # Pandas untuk manipulasi dan analisis data
-import numpy as np  # NumPy untuk komputasi numerik dan array multidimensi
-import matplotlib.pyplot as plt  # Matplotlib untuk membuat visualisasi data statis
-import seaborn as sns  # Seaborn untuk visualisasi data yang lebih menarik dan kompleks
-import plotly.express as px  # Plotly untuk visualisasi interaktif dan grafik kompleks
-from PIL import Image  # Untuk menangani gambar
+import streamlit as st  
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt  
+import seaborn as sns  
+import plotly.express as px  
 
-# Fungsi untuk memuat data dengan caching agar lebih cepat
+# Load Data dengan Cache untuk Optimasi
 @st.cache_data
 def load_data():
     df = pd.read_csv("dashboard/main_data.csv")
@@ -24,50 +23,15 @@ df_main = load_data()
 # Streamlit Dashboard
 st.title("🚴‍♂️ Bike Sharing Data Dashboard")
 
-# Penjelasan Singkat
 st.markdown("""
 **Selamat datang di dashboard Bike Sharing!**  
-Dashboard ini memungkinkan Anda untuk mengeksplorasi tren penggunaan sepeda berdasarkan data peminjaman dari sistem bike sharing. Temukan pola-pola menarik, seperti:
-
-- **Jumlah penyewaan sepeda** berdasarkan **bulan**, **hari**, dan **jam**.
-- **Pengaruh cuaca** dan **musim** terhadap peminjaman sepeda.
-- **Perbandingan hari kerja dan libur** dalam peminjaman sepeda.
-
-Data ini membantu memahami bagaimana faktor-faktor seperti waktu, cuaca, dan musim memengaruhi jumlah peminjaman sepeda.
+Dashboard ini memungkinkan Anda untuk mengeksplorasi tren penggunaan sepeda berdasarkan data peminjaman.
 """)
 
-# Sidebar dengan Logo dan Filter Tanggal
-image_path = "dashboard/assets/Logo.png"
-try:
-    image = Image.open(image_path)
-    st.sidebar.image(image, use_column_width=True)
-except FileNotFoundError:
-    st.sidebar.warning("Gambar tidak ditemukan!")
-
-# Menentukan rentang awal & akhir dari dataset
-start_date = df_main['dteday'].min().date()
-end_date = df_main['dteday'].max().date()
-
-# Sidebar Date Filter dengan rentang default sesuai dataset
-# Sidebar Date Filter
-date_range = st.sidebar.date_input(
-    "Pilih Rentang Waktu",
-    [start_date, end_date],
-    min_value=start_date,
-    max_value=end_date
-)
-
-# Pastikan pengguna memilih rentang tanggal yang valid
-if isinstance(date_range, list) and len(date_range) == 2:
-    start_filter, end_filter = date_range
-    df_filtered = df_main[
-        (df_main['dteday'] >= pd.to_datetime(start_filter)) & 
-        (df_main['dteday'] <= pd.to_datetime(end_filter))
-    ]
-else:
-    st.error("Harap pilih rentang tanggal yang valid.")
-    df_filtered = df_main  # Gunakan seluruh dataset jika terjadi kesalahan
-
+# Sidebar: Logo dan Filter Rentang Waktu
+st.sidebar.image("dashboard/assets/Logo.png", use_column_width=True)
+date_range = st.sidebar.date_input("Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
+df_filtered = df_main[(df_main['dteday'] >= pd.to_datetime(date_range[0])) & (df_main['dteday'] <= pd.to_datetime(date_range[1]))]
 
 # KPI Section
 st.subheader("📊 Overview")
@@ -82,60 +46,41 @@ plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 plt.title("Tren Penyewaan Sepeda Sepanjang Tahun")
 plt.xlabel("Bulan")
 plt.ylabel("Jumlah Penyewaan")
+plt.legend(title="Tahun", labels=["2011", "2012"])
 plt.grid()
 st.pyplot(plt)
 
 # 2. Pola Penyewaan Berdasarkan Hari & Jam
 st.subheader("⏰ Pola Penyewaan Berdasarkan Hari & Jam")
-if 'hr' in df_main.columns:
-    hourly_trend = df_filtered.groupby(['hr', 'weekday'])['cnt'].mean().reset_index()
-    plt.figure(figsize=(12, 6))
-    sns.lineplot(data=hourly_trend, x="hr", y="cnt", hue="weekday", palette="Set1", linewidth=2.5, marker="o")
-    plt.axvspan(7, 9, color='gray', alpha=0.2, label="Jam Sibuk Pagi")
-    plt.axvspan(16, 18, color='gray', alpha=0.2, label="Jam Sibuk Sore")
-    plt.title("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari untuk Setiap Hari")
-    plt.xlabel("Jam")
-    plt.ylabel("Jumlah Penyewaan")
-    plt.xticks(ticks=range(0, 24, 2))
-    plt.legend(title="Hari", labels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
-    plt.grid()
-    st.pyplot(plt)
-else:
-    st.warning("Data tidak memiliki kolom 'hr' sehingga tidak dapat menampilkan pola per jam.")
+hourly_trend = df_filtered.groupby(['hr', 'weekday'])['cnt'].mean().reset_index()
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=hourly_trend, x="hr", y="cnt", hue="weekday", palette="Set1", linewidth=2.5, marker="o")
+plt.axvspan(7, 9, color='gray', alpha=0.2, label="Jam Sibuk Pagi")
+plt.axvspan(16, 18, color='gray', alpha=0.2, label="Jam Sibuk Sore")
+plt.title("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari untuk Setiap Hari")
+plt.xlabel("Jam")
+plt.ylabel("Jumlah Penyewaan")
+plt.xticks(ticks=range(0, 24, 2))
+plt.legend(title="Hari", labels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+plt.grid()
+st.pyplot(plt)
 
 # 3. Pengaruh Musim & Cuaca terhadap Penyewaan
 st.subheader("🌦️ Pengaruh Musim & Cuaca terhadap Penyewaan")
 plt.figure(figsize=(12, 5))
-sns.boxplot(data=df_filtered, x='season_name', y='cnt', palette='pastel')
+sns.boxplot(data=df_filtered, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
+plt.xticks(ticks=[0, 1, 2, 3], labels=['Spring', 'Summer', 'Fall', 'Winter'])
 plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 plt.xlabel("Musim")
 plt.ylabel("Jumlah Penyewaan")
 st.pyplot(plt)
 
 plt.figure(figsize=(12, 5))
-sns.boxplot(data=df_filtered, x='weather_desc', y='cnt', palette='pastel')
+sns.boxplot(data=df_filtered, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
+plt.xticks(ticks=[0, 1, 2, 3], labels=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
 plt.xlabel("Kondisi Cuaca")
 plt.ylabel("Jumlah Penyewaan")
-st.pyplot(plt)
-
-# 4. Perbandingan Penyewaan antara Hari Kerja & Hari Libur
-st.subheader("📅 Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
-plt.figure(figsize=(8, 5))
-sns.barplot(data=df_filtered, x='holiday', y='cnt', palette='Blues', dodge=False)
-plt.xticks(ticks=[0, 1], labels=['Hari Kerja', 'Hari Libur'])
-plt.title("Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
-plt.xlabel("Kategori Hari")
-plt.ylabel("Jumlah Penyewaan")
-st.pyplot(plt)
-
-# 5. Distribusi Pengguna Sepeda (Casual vs Registered)
-st.subheader("👥 Distribusi Pengguna Sepeda (Casual vs Registered)")
-plt.figure(figsize=(10, 5))
-df_filtered[['casual', 'registered']].sum().plot(kind='bar', color=['lightblue', 'salmon'])
-plt.title("Distribusi Pengguna Sepeda (Casual vs Registered)")
-plt.ylabel("Total Pengguna")
-plt.xticks(rotation=0)
 st.pyplot(plt)
 
 st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
