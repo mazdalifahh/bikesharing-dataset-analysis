@@ -83,4 +83,24 @@ plt.xlabel("Kondisi Cuaca")
 plt.ylabel("Jumlah Penyewaan")
 st.pyplot(plt)
 
+# 4. Perbandingan Penyewaan antara Hari Kerja & Hari Libur
+st.subheader("🏖️ Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
+plt.figure(figsize=(8, 5))
+sns.barplot(data=df_filtered, x='holiday', y='cnt', hue='holiday', palette='Blues', dodge=False)
+plt.xticks(ticks=[0, 1], labels=['Hari Kerja', 'Hari Libur'])
+plt.title("Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
+plt.xlabel("Kategori Hari")
+plt.ylabel("Jumlah Penyewaan")
+st.pyplot(plt)
+
+# 5. Distribusi Pengguna Sepeda (Casual vs. Registered)
+st.subheader("👥 Distribusi Pengguna Sepeda (Casual vs. Registered)")
+plt.figure(figsize=(10, 5))
+df_filtered[['casual', 'registered']].sum().plot(kind='bar', color=['lightblue', 'salmon'])
+plt.title("Distribusi Pengguna Sepeda (Casual vs. Registered)")
+plt.ylabel("Total Pengguna")
+plt.xticks(rotation=0)
+st.pyplot(plt)
+
+
 st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
