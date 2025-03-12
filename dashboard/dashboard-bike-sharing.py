@@ -59,33 +59,17 @@ st.pyplot(plt)
 # 2. Pola Penyewaan Berdasarkan Hari & Jam
 st.subheader("⏰ Pola Penyewaan Berdasarkan Hari & Jam")
 
-# Debugging untuk memastikan data ada
-if 'hr' not in df_filtered.columns or 'weekday' not in df_filtered.columns or 'cnt' not in df_filtered.columns:
-    st.error("Kolom yang dibutuhkan tidak ditemukan dalam dataframe.")
-    st.stop()
-
-# Buat data tren per jam dan hari
+# Pastikan data sesuai
 hourly_trend = df_filtered.groupby(['hr', 'weekday'])['cnt'].mean().reset_index()
 
-# Debugging: Lihat isi dataframe
-st.write("📊 Contoh data hourly_trend:", hourly_trend.head())
-
-# Urutan hari dalam bahasa Inggris
+# Urutan hari (pastikan sesuai dengan dataset)
 weekday_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-# Pastikan weekday dalam format numerik 0-6 (Senin-Minggu)
-if df_filtered['weekday'].dtype not in [int, float]:
-    st.error("Kolom 'weekday' bukan dalam format numerik. Periksa data sumber.")
-    st.stop()
-
-# Konversi angka weekday ke nama hari
+# Mapping angka weekday ke nama hari
 weekday_map = {0: 'Mon', 1: 'Tue', 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun'}
 hourly_trend['weekday'] = hourly_trend['weekday'].map(weekday_map)
 
-# Debugging: Pastikan mapping berhasil
-st.write("🔍 Data setelah mapping:", hourly_trend.head())
-
-# Buat color mapping agar warna konsisten
+# Mapping warna agar sesuai antara line dan legenda
 colors = sns.color_palette("Set1", n_colors=7)
 color_map = dict(zip(weekday_order, colors))
 
@@ -95,7 +79,7 @@ ax = sns.lineplot(
     data=hourly_trend, 
     x="hr", y="cnt", 
     hue="weekday", 
-    palette=color_map,  # Gunakan warna yang sudah dipetakan
+    palette=color_map,  # Pakai color mapping yang benar
     linewidth=2.5, marker="o"
 )
 
@@ -103,11 +87,11 @@ ax = sns.lineplot(
 plt.axvspan(7, 9, color='gray', alpha=0.2, label="Jam Sibuk Pagi")
 plt.axvspan(16, 18, color='gray', alpha=0.2, label="Jam Sibuk Sore")
 
-# Pastikan legenda sesuai dengan data
+# Pastikan legenda mengikuti warna yang benar
 handles, labels = ax.get_legend_handles_labels()
-plt.legend(handles=handles, labels=weekday_order, title="Hari")
+plt.legend(handles=handles, title="Hari", labels=weekday_order)
 
-# Tambahkan label dan grid
+# Label dan grid
 plt.title("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari untuk Setiap Hari")
 plt.xlabel("Jam")
 plt.ylabel("Jumlah Penyewaan")
