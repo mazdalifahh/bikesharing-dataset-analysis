@@ -93,43 +93,38 @@ st.subheader("🌦️ Pengaruh Musim & Cuaca terhadap Penyewaan")
 
 # Boxplot Musim
 plt.figure(figsize=(12, 5))
-ax = sns.boxplot(data=df_filtered, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
+sns.boxplot(data=df_filtered, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
 plt.xticks(ticks=[0, 1, 2, 3], labels=['Spring', 'Summer', 'Fall', 'Winter'])
 plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 plt.xlabel("Musim")
 plt.ylabel("Jumlah Penyewaan")
-
-# Menambahkan label angka di atas setiap boxplot
-season_means = df_filtered.groupby('season')['cnt'].mean()
-for i, mean in enumerate(season_means):
-    plt.text(i, mean, f'{int(mean)}', ha='center', va='bottom', fontsize=10)
-
-st.pyplot(plt)
+st.pyplot(plt)  # Tanpa anotasi angka
 
 # Boxplot Cuaca
 plt.figure(figsize=(12, 5))
-ax = sns.boxplot(data=df_filtered, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
+sns.boxplot(data=df_filtered, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
 plt.xticks(ticks=[0, 1, 2, 3], labels=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
 plt.xlabel("Kondisi Cuaca")
 plt.ylabel("Jumlah Penyewaan")
-
-# Menambahkan label angka di atas setiap boxplot
-weather_means = df_filtered.groupby('weathersit')['cnt'].mean()
-for i, mean in enumerate(weather_means):
-    plt.text(i, mean, f'{int(mean)}', ha='center', va='bottom', fontsize=10)
-
-st.pyplot(plt)
+st.pyplot(plt)  # Tanpa anotasi angka
 
 # 4. Perbandingan Penyewaan antara Hari Kerja & Hari Libur
 st.subheader("🏖️ Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
 plt.figure(figsize=(12, 5))
-sns.barplot(data=df_filtered, x='holiday', y='cnt', hue='holiday', palette='Blues', dodge=False)
+ax = sns.barplot(data=df_filtered, x='holiday', y='cnt', hue='holiday', palette='Blues', dodge=False)
 plt.xticks(ticks=[0, 1], labels=['Hari Kerja', 'Hari Libur'])
 plt.title("Perbandingan Penyewaan antara Hari Kerja & Hari Libur")
 plt.xlabel("Kategori Hari")
 plt.ylabel("Jumlah Penyewaan")
-st.pyplot(plt)
+
+# **Menambahkan anotasi angka di atas setiap bar**
+for p in ax.patches:
+    ax.annotate(f'{int(p.get_height())}', 
+                (p.get_x() + p.get_width() / 2, p.get_height()), 
+                ha='center', va='bottom', fontsize=10)
+
+st.pyplot(plt)  
 
 # 5. Distribusi Pengguna Sepeda (Casual vs. Registered)
 st.subheader("👥 Distribusi Pengguna Sepeda (Casual vs. Registered)")
