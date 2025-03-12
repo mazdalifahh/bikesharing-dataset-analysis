@@ -49,7 +49,25 @@ start_date = df_main['dteday'].min().date()
 end_date = df_main['dteday'].max().date()
 
 # Sidebar Date Filter dengan rentang default sesuai dataset
-date_range = st.sidebar.date_input("Pilih Rentang Waktu", [start_date, end_date], min_value=start_date, max_value=end_date)
+# Sidebar Date Filter
+date_range = st.sidebar.date_input(
+    "Pilih Rentang Waktu",
+    [start_date, end_date],
+    min_value=start_date,
+    max_value=end_date
+)
+
+# Pastikan pengguna memilih rentang tanggal yang valid
+if isinstance(date_range, list) and len(date_range) == 2:
+    start_filter, end_filter = date_range
+    df_filtered = df_main[
+        (df_main['dteday'] >= pd.to_datetime(start_filter)) & 
+        (df_main['dteday'] <= pd.to_datetime(end_filter))
+    ]
+else:
+    st.error("Harap pilih rentang tanggal yang valid.")
+    df_filtered = df_main  # Gunakan seluruh dataset jika terjadi kesalahan
+
 
 # KPI Section
 st.subheader("📊 Overview")
