@@ -20,5 +20,5 @@ pip install -r requirements.txt
 Untuk menjalankan aplikasi Streamlit, jalankan perintah berikut:
 
 ```bash
-streamlit run dashboard.py
+streamlit run dashboard-bike-sharing.py
 ```
