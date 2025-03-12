@@ -29,6 +29,7 @@ Dashboard ini memungkinkan Anda untuk mengeksplorasi tren penggunaan sepeda berd
 """)
 
 # Sidebar: Logo dan Filter Rentang Waktu
+st.write(f"Rentang data: {df_main['dteday'].min().date()} - {df_main['dteday'].max().date()}")
 st.sidebar.image("dashboard/assets/Logo.png", use_column_width=True)
 date_range = st.sidebar.date_input("Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
 df_filtered = df_main[(df_main['dteday'] >= pd.to_datetime(date_range[0])) & (df_main['dteday'] <= pd.to_datetime(date_range[1]))]
