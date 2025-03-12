@@ -44,10 +44,12 @@ try:
 except FileNotFoundError:
     st.sidebar.warning("Gambar tidak ditemukan!")
 
-date_range = st.sidebar.date_input(
-    "Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()]
-)
-df_filtered = df_main[(df_main['dteday'] >= pd.to_datetime(date_range[0])) & (df_main['dteday'] <= pd.to_datetime(date_range[1]))]
+# Menentukan rentang awal & akhir dari dataset
+start_date = df_main['dteday'].min().date()
+end_date = df_main['dteday'].max().date()
+
+# Sidebar Date Filter dengan rentang default sesuai dataset
+date_range = st.sidebar.date_input("Pilih Rentang Waktu", [start_date, end_date], min_value=start_date, max_value=end_date)
 
 # KPI Section
 st.subheader("📊 Overview")
