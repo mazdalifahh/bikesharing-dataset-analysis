@@ -41,7 +41,13 @@ st.metric("Average Rentals per Day", round(df_filtered['cnt'].mean(), 2))
 # 1. Tren Penyewaan Sepeda Sepanjang Tahun
 st.subheader("📅 Tren Penyewaan Sepeda Sepanjang Tahun")
 plt.figure(figsize=(12, 5))
-sns.lineplot(data=df_filtered, x='month', y='cnt', hue='year', marker='o', palette='coolwarm')
+ax = sns.lineplot(data=df_filtered, x='month', y='cnt', hue='year', marker='o', palette='coolwarm')
+
+# Menambahkan label angka pada setiap titik
+for line in ax.lines:
+    for x, y in zip(line.get_xdata(), line.get_ydata()):
+        ax.text(x, y, f'{int(y)}', ha='center', va='bottom', fontsize=10)
+
 plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 plt.title("Tren Penyewaan Sepeda Sepanjang Tahun")
 plt.xlabel("Bulan")
