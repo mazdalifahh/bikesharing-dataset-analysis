@@ -14,12 +14,8 @@ df_main['month'] = df_main['dteday'].dt.month
 df_main['year'] = df_main['dteday'].dt.year
 df_main['weekday'] = df_main['dteday'].dt.weekday
 
-# Mapping season & weather labels
-season_map = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
-df_main['season_name'] = df_main['season'].map(season_map)
-weather_map = {1: 'Clear', 2: 'Mist', 3: 'Light Snow/Rain', 4: 'Heavy Rain/Snow'}
-df_main['weather_desc'] = df_main['weathersit'].map(weather_map)
-
+df_main['season_name'] = df_main['season'].map({1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'})
+df_main['weather_desc'] = df_main['weathersit'].map({1: 'Clear', 2: 'Mist', 3: 'Light Snow/Rain', 4: 'Heavy Rain/Snow'})
 df_main['usage_category'] = pd.cut(df_main['cnt'], bins=[0, 2000, 4000, 8000], labels=['Low', 'Medium', 'High'])
 
 # Streamlit Dashboard
@@ -42,182 +38,58 @@ Data ini membantu memahami bagaimana faktor-faktor seperti waktu, cuaca, dan mus
 image_path = "dashboard/assets/Logo.png"
 st.sidebar.image(image_path, use_column_width=True)
 
-# Sidebar
+# Sidebar Date Filter
 date_range = st.sidebar.date_input("Pilih Rentang Waktu", [df_main['dteday'].min().date(), df_main['dteday'].max().date()])
-
-# Filter Data
-df_filtered = df_main.loc[
-    (df_main['dteday'].between(pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])))
-]
+df_filtered = df_main.loc[(df_main['dteday'].between(pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])))]
 
 # KPI Section
 st.subheader("📊 Overview")
 st.metric("Total Rentals", df_filtered['cnt'].sum())
 st.metric("Average Rentals per Day", round(df_filtered['cnt'].mean(), 2))
 
-st.subheader("Tren Penyewaan Sepeda Sepanjang Tahun")
-
-# Pastikan kolom dteday sudah dalam format datetime
-df_main['dteday'] = pd.to_datetime(df_main['dteday'])
-
-# Tambahkan kolom tahun & bulan
-df_main['year'] = df_main['dteday'].dt.year
-df_main['month'] = df_main['dteday'].dt.month
-
-# Plot dengan hue berdasarkan tahun
-plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker="o")
-
-plt.xticks(range(1, 13))  # Menampilkan angka bulan dengan benar (1-12)
-plt.title("Tren Penyewaan Sepeda per Bulan (2011 vs 2012)")
+# 1. Tren Penyewaan Sepeda Sepanjang Tahun
+st.subheader("📅 Tren Penyewaan Sepeda Sepanjang Tahun")
+plt.figure(figsize=(12, 5))
+sns.lineplot(data=df_main, x='month', y='cnt', hue='year', marker='o', palette='coolwarm')
+plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+plt.title("Tren Penyewaan Sepeda Sepanjang Tahun")
 plt.xlabel("Bulan")
 plt.ylabel("Jumlah Penyewaan")
+plt.legend(title="Tahun", labels=["2011", "2012"])
 plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
+st.pyplot(plt)
 
-## Pola Penyewaan Sepeda Berdasarkan Jam dan Hari
-# Pilih warna tunggal untuk semua bar
-single_color = "steelblue"  # Ganti dengan warna lain jika diinginkan
-
-# Pola Penyewaan Sepeda Berdasarkan Hari dalam Seminggu
-st.subheader("Pola Penyewaan Sepeda yang Berbeda Berdasarkan Hari")
-
-# Group by 'weekday' to get average count of rentals per day
-daily_rentals = df_main.groupby('weekday')['cnt'].mean().reset_index()
-
-# Plot bar chart for daily rentals dengan satu warna saja
-plt.figure(figsize=(10, 5))
-sns.barplot(data=daily_rentals, x='weekday', y='cnt', color=single_color)
-plt.title('Penyewaan Sepeda Berdasarkan Hari dalam Seminggu')
-plt.xlabel('Hari')
-plt.ylabel('Jumlah Penyewa')
-plt.xticks(ticks=range(7), labels=["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"])
-plt.grid(axis='y')
-st.pyplot(plt)  # Display the plot in Streamlit
-
-# Pola Penyewaan Sepeda per Jam
-st.subheader("Pola Penyewaan Sepeda per Jam")
-
-# Plotkan tren penyewaan sepeda per jam dengan warna yang sama
-plt.figure(figsize=(10, 5))
-sns.lineplot(data=df_main, x='hr', y='cnt', marker="o", color=single_color)
-plt.title('Pola Penyewaan Sepeda per Jam')
-plt.xlabel('Jam')
-plt.ylabel('Jumlah Penyewa')
-plt.xticks(range(0, 24))
+# 2. Pola Penyewaan Berdasarkan Hari & Jam
+st.subheader("⏰ Pola Penyewaan Berdasarkan Hari & Jam")
+hourly_trend = df_main.groupby(['hr', 'weekday'])['cnt'].mean().reset_index()
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=hourly_trend, x="hr", y="cnt", hue="weekday", palette="Set1", linewidth=2.5, marker="o")
+plt.axvspan(7, 9, color='gray', alpha=0.2, label="Jam Sibuk Pagi")
+plt.axvspan(16, 18, color='gray', alpha=0.2, label="Jam Sibuk Sore")
+plt.title("Tren Penyewaan Sepeda Berdasarkan Jam dalam Sehari untuk Setiap Hari")
+plt.xlabel("Jam")
+plt.ylabel("Jumlah Penyewaan")
+plt.xticks(ticks=range(0, 24, 2))
+plt.legend(title="Hari", labels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
 plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
+st.pyplot(plt)
 
-## Musim dan Cuaca
-# Add subheader for this section
-st.subheader("Pengaruh Musim dan Cuaca terhadap Penyewaan Sepeda")
-
-# Plot boxplot untuk pengaruh musim terhadap penyewaan sepeda
-plt.figure(figsize=(8, 5))
-sns.boxplot(data=df_main, x='season', y='cnt', hue='season', palette="pastel", dodge=False)
-
-# Label musim
-plt.xticks([0, 1, 2, 3], ["Spring", "Summer", "Fall", "Winter"])  # Ubah angka jadi label musim
+# 3. Pengaruh Musim & Cuaca terhadap Penyewaan
+st.subheader("🌦️ Pengaruh Musim & Cuaca terhadap Penyewaan")
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df_main, x='season', y='cnt', hue='season', palette='pastel', dodge=False)
+plt.xticks(ticks=[0, 1, 2, 3], labels=['Spring', 'Summer', 'Fall', 'Winter'])
 plt.title("Pengaruh Musim terhadap Penyewaan Sepeda")
 plt.xlabel("Musim")
 plt.ylabel("Jumlah Penyewaan")
-plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
+st.pyplot(plt)
 
-# Plot boxplot untuk pengaruh cuaca terhadap penyewaan sepeda
-plt.figure(figsize=(8, 5))
-sns.boxplot(data=df_main, x='weathersit', y='cnt', hue='weathersit', palette="pastel", dodge=False)
-
-# Label cuaca
-plt.xticks([0, 1, 2, 3], ["Clear", "Mist", "Light Snow/Rain", "Heavy Rain/Snow"])  # Ubah angka jadi label deskriptif cuaca
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df_main, x='weathersit', y='cnt', hue='weathersit', palette='pastel', dodge=False)
+plt.xticks(ticks=[0, 1, 2, 3], labels=['Clear', 'Mist', 'Light Snow/Rain', 'Heavy Rain/Snow'])
 plt.title("Pengaruh Cuaca terhadap Penyewaan Sepeda")
 plt.xlabel("Kondisi Cuaca")
-plt.ylabel("Jumlah Penyewa")
-plt.legend([],[], frameon=False)  # Hilangkan legend karena hue dan x sama
-plt.grid()
-st.pyplot(plt)  # Display the plot in Streamlit
-
-## Hari kerja dan Libur
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Analisis peminjaman sepeda berdasarkan hari kerja vs libur
-
-# Add subheader for this section
-st.subheader("Peminjaman Sepeda berdasarkan Hari Kerja vs Hari Libur")
-
-plt.figure(figsize=(8,5))
-sns.barplot(data=df_main, x='workingday', y='cnt', palette="Blues_d")
-plt.xticks([0, 1], ['Hari Libur', 'Hari Kerja'])
-plt.xlabel('Hari')
-plt.ylabel('Jumlah Peminjaman')
-plt.title('Peminjaman Sepeda pada Hari Kerja vs Hari Libur')
-plt.grid(axis='y')
-plt.show()
-st.pyplot(plt)  # Display the plot in Streamlit
-
-## Analisis Peminjaman berdasarkan Musim dan kategori Pengguna
-# Add subheader for this section
-st.subheader("Peminjaman berdasarkan Musim dan Kategori Pengguna")
-
-# Clustering berdasarkan musim
-season_map = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
-df_main['season_name'] = df_main['season'].map(season_map)
-
-# Visualisasi peminjaman berdasarkan musim
-plt.figure(figsize=(8, 5))
-sns.barplot(data=df_main, x='season_name', y='cnt', order=['Spring', 'Summer', 'Fall', 'Winter'], palette="viridis")
-plt.xlabel('Musim')
-plt.ylabel('Jumlah Peminjaman')
-plt.title('Peminjaman Sepeda Berdasarkan Musim')
-plt.grid(axis='y')
-plt.show()
-st.pyplot(plt)  # Display the plot in Streamlit
-
-## Binning dan RFM Analysis
-
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import streamlit as st
-
-# Misalkan df_main adalah dataframe yang sudah kamu load
-# df_main = pd.read_csv('data.csv') # Contoh pengambilan data
-
-# Pastikan kolom 'dteday' dalam format datetime
-df_main['dteday'] = pd.to_datetime(df_main['dteday'])
-
-# 1. **Recency**: Menghitung Recency (waktu terakhir penyewaan)
-current_date = df_main['dteday'].max()  # Tanggal terakhir di dataset
-
-# Menghitung Recency
-df_main['Recency'] = (current_date - df_main['dteday']).dt.days
-
-# 2. **Frequency**: Menghitung jumlah penyewaan per hari
-df_main['Frequency'] = df_main['cnt']
-
-# 3. **Monetary**: Menghitung Monetary (jumlah penyewaan)
-df_main['Monetary'] = df_main['cnt']
-
-# 4. **Binning**: Menggunakan binning untuk membagi jumlah penyewaan
-# Binning jumlah penyewaan untuk kategori 'casual' dan 'registered'
-
-# Membuat bin untuk casual
-df_main['Casual_Category'] = pd.cut(df_main['casual'], bins=[0, 500, 1500, 3000, 5000], labels=['Low', 'Medium', 'High', 'Very High'])
-
-# Membuat bin untuk registered
-df_main['Registered_Category'] = pd.cut(df_main['registered'], bins=[0, 500, 1500, 3000, 5000], labels=['Low', 'Medium', 'High', 'Very High'])
-
-# Menampilkan RFM DataFrame (tanpa duplikat)
-df_rfm = df_main[['dteday', 'Recency', 'Frequency', 'Monetary', 'Casual_Category', 'Registered_Category']].drop_duplicates()
-
-# Menampilkan DataFrame RFM di Streamlit
-st.subheader("📊 RFM Analysis with Binning")
-st.write("RFM Analysis dengan penambahan binning untuk kategori Casual dan Registered.")
-
-# Menampilkan RFM DataFrame
-st.write(df_rfm)
-
+plt.ylabel("Jumlah Penyewaan")
+st.pyplot(plt)
 
 st.caption('Copyright (c) Mazdalifah Hanuranda 2025')
